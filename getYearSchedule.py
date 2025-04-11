@@ -4,9 +4,9 @@ import json
 import fastf1
 
 storedSchedule = {}
-schedule = fastf1.get_event_schedule(2025)#.get_event_by_round(1)["EventDate"]
-for i in range(1,25):
-    event = schedule.get_event_by_round(i)
+schedule = fastf1.get_event_schedule(2025)#Gets object of whole 2025 season
+for i in range(1,25): #runs through each event num (ignoring 0 as only testing.)
+    event = schedule.get_event_by_round(i) #gets the event by its round number.
     infoDict = {
         "RoundNumber":int(event["RoundNumber"]),
         "EventName":event["EventName"],
@@ -19,9 +19,10 @@ for i in range(1,25):
         "Session5DateUtc":str(event["Session5DateUtc"]),
         "EventFormat":event["EventFormat"]
         }
-    storedSchedule[str(event["EventDate"])] = infoDict
+    storedSchedule[str(event["EventDate"])] = infoDict # stored so that the main dict keys are the grand prix dates. Other info is a dict for each event stored in the main dict.
+    #today is a race day if today, tomorrow, or the day after, is a date in the main dict as FP1 will be 2 days before the grand prix date.
 
 with open("f1Data/events.json", "w") as f:
-    json.dump(storedSchedule, f)
+    json.dump(storedSchedule, f) # store in events.json.
 
 print(storedSchedule)
