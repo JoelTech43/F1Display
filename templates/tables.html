@@ -5,14 +5,29 @@
         <link rel="stylesheet" href="/static/styles.css">
     </head>
     <body>
-        <table class="table"> <!--Populates table etc-->
+        <table class="table"> <!--Populates Constructors Championships table etc-->
             <tr class="table__header">
-                {% for header in headings %}
+                {% for header in constructorHeadings %}
                 <th class="table__cell">{{ header }}</th>
                 {% endfor %}
             </tr>
-            {% for row in data %}
-            <tr class="table__row" style="background-color: {{ row[-1] }};"> <!--Proof of concept that a value in the data can determine the row colour - important for team colours-->
+            {% for row in constructorData %}
+            <tr class="table__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to the team's colour-->
+                {% for cell in row[0:-1] %}
+                <td class="table__cell">{{ cell }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+
+        <table class="table"> <!--Populates Drivers Championships table etc-->
+            <tr class="table__header">
+                {% for header in driverHeadings %}
+                <th class="table__cell">{{ header }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in driverData %}
+            <tr class="table__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to team colour-->
                 {% for cell in row[0:-1] %}
                 <td class="table__cell">{{ cell }}</td>
                 {% endfor %}
