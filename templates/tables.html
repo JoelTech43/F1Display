@@ -12,7 +12,7 @@
                 {% endfor %}
             </tr>
             {% for row in constructorData %}
-            <tr class="table__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to the team's colour-->
+            <tr class="table__constructor__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to the team's colour-->
                 {% for cell in row[0:-1] %}
                 <td class="table__cell">{{ cell }}</td>
                 {% endfor %}
@@ -27,8 +27,9 @@
                 {% endfor %}
             </tr>
             {% for row in driverData %}
-            <tr class="table__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to team colour-->
-                {% for cell in row[0:-1] %}
+            <tr class="table__driver__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to team colour-->
+                <td class="table__cell photo__cell"><img src="{{ row[-2] }}" class="driverPhoto"></td>
+                {% for cell in row[0:-2] %}
                 <td class="table__cell">{{ cell }}</td>
                 {% endfor %}
             </tr>
