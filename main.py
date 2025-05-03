@@ -13,6 +13,11 @@ def download_image(url, destination):
     with open(destination, "wb") as f:
         f.write(data.content)
 
+def hexToRGB(value):
+    value = value.lstrip('#')
+    lv = len(value)
+    return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
+
 def getThumbnails(day, month, year):
     driverData = requests.get('https://api.openf1.org/v1/drivers?session_key=latest').json()
     for i in driverData:
@@ -64,14 +69,14 @@ def getChampionshipsStandings(): #requests all data and then returns needed data
         done = False
         while not done and count < len(driverData): #Use while so that can exit once colour has been found
             driver = driverData[count] # will select every driver from driverData until finds one from the current team.
-            if name.split()[0] in driver["team_name"]: #Checks first word of current team's name is in the driverData driver's team name. For some reason Alpine didn't work otherwise.
+            if (name != "Racing Bulls" and name.split()[0] in driver["team_name"]) or (name == "Racing Bulls" and driver["team_name"] == "Racing Bulls"): #Checks first word of current team's name is in the driverData driver's team name. For some reason Alpine didn't work otherwise. Exception is Racing Bulls as Racing is also in Red Bull Racing
                 teamColour = "#" + driver["team_colour"]
                 done = True #don't have to check more drivers as have found the team colour
             count += 1
-        constructorTable.append([position, name, points, teamColour]) #adds all of the data as a row in the constructorTable list. teamColour won't be displayed, just used for row colour
+        constructorTable.append([position, name, points, hexToRGB(teamColour)]) #adds all of the data as a row in the constructorTable list. teamColour won't be displayed, just used for row colour
     
-    driverTable = []
-    driverTable.append(["", "Position", "Number", "Name", "Points", "Wins","Constructor"]) #adds header row to driverTable
+    tempDriverTable = []
+    tempDriverTable.append(["", "Position", "Number", "Points", "Wins",]) #adds header row to tempDriverTable
     for driver in driverStanding:
         name = f"{driver["Driver"]["givenName"]} {driver["Driver"]["familyName"]}"
         position = driver["position"]
@@ -92,7 +97,18 @@ def getChampionshipsStandings(): #requests all data and then returns needed data
                 teamColour = "#" + selectedDriver["team_colour"]
                 done = True #don't have to check more driverData drivers as have found the one we need.
             count += 1
-        driverTable.append([position,number,name,points,wins,constructor,thumbnailPath,teamColour]) #adds all of the data as a row in the driverTable list. teamColour only used for row colour, not displayed as text.
+        tempDriverTable.append([position,number,points,wins,thumbnailPath,hexToRGB(teamColour)]) #adds all of the data as a row in the tempDriverTable list. teamColour only used for row colour, not displayed as text.
+    
+    driverTable = [tempDriverTable[0]]
+    del tempDriverTable[0]
+    numOfDrivers = len(tempDriverTable)
+    numOfRows = numOfDrivers//2
+    for i in range(numOfRows):
+        row = []
+        row.append(tempDriverTable[i])
+        row.append(tempDriverTable[i+numOfRows])
+        driverTable.append(row)
+
     return constructorTable, driverTable #returns both lists
 
 def getdata(): #gets all data in format to be passed to tables.
@@ -112,7 +128,7 @@ def table():
         appCounter = 0
     constructorHeadings, constructorData, driverHeadings, driverData = getdata()
     print(driverData)
-    timeout = 10000 #change timeout based on whether it is a session or not.
+    timeout = 3600000 #change timeout based on whether it is a session or not.
     return render_template("tables.html", constructorHeadings=constructorHeadings, constructorData=constructorData, driverHeadings=driverHeadings, driverData=driverData, timeout=timeout) #renders the html file, passing it the table headers and data, and telling how long before reload.
 
 setup()

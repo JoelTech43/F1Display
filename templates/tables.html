@@ -5,36 +5,48 @@
         <link rel="stylesheet" href="/static/styles.css">
     </head>
     <body>
-        <table class="table"> <!--Populates Constructors Championships table etc-->
-            <tr class="table__header">
-                {% for header in constructorHeadings %}
-                <th class="table__cell">{{ header }}</th>
-                {% endfor %}
-            </tr>
-            {% for row in constructorData %}
-            <tr class="table__constructor__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to the team's colour-->
-                {% for cell in row[0:-1] %}
-                <td class="table__cell">{{ cell }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-
-        <table class="table"> <!--Populates Drivers Championships table etc-->
-            <tr class="table__header">
-                {% for header in driverHeadings %}
-                <th class="table__cell">{{ header }}</th>
-                {% endfor %}
-            </tr>
-            {% for row in driverData %}
-            <tr class="table__driver__row" style="background-color: {{ row[-1] }};"> <!--Sets row colour to team colour-->
-                <td class="table__cell photo__cell"><img src="{{ row[-2] }}" class="driverPhoto"></td>
-                {% for cell in row[0:-2] %}
-                <td class="table__cell">{{ cell }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table> <!--Script at end reloads the page every so often to update content, will be more frequent during a race.-->
+        <div class="row">
+            <div class="column">
+                <table class="table"> <!--Populates Constructors Championships table etc-->
+                    <tr class="table__header">
+                        {% for header in constructorHeadings %}
+                        <th class="table__cell">{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for row in constructorData %}
+                    <tr class="table__constructor__row" style="background-color: rgba({{ row[-1][0] }}, {{ row[-1][1] }}, {{ row[-1][2] }}, 0.5);"> <!--Sets row colour to the team's colour-->
+                        {% for cell in row[0:-1] %}
+                        <td class="table__cell">{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table class="table"> <!--Populates Drivers Championships table etc-->
+                    <tr class="table__header">
+                        {% for header in driverHeadings %}
+                        <th class="table__cell">{{ header }}</th>
+                        {% endfor %}
+                        {% for header in driverHeadings %}
+                        <th class="table__cell">{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for row in driverData %}
+                    <tr class="table__driver__row"> <!--Sets row colour to team colour-->
+                        <td class="table__cell photo__cell" style="background-color: rgba({{ row[0][-1][0] }}, {{ row[0][-1][1] }}, {{ row[0][-1][2] }}, 0.5);"><img src="{{ row[0][-2] }}" class="driverPhoto"></td>
+                        {% for cell in row[0][0:-2] %}
+                        <td class="table__cell" style="background-color: rgba({{ row[0][-1][0] }}, {{ row[0][-1][1] }}, {{ row[0][-1][2] }}, 0.5);">{{ cell }}</td>
+                        {% endfor %}
+                        <td class="table__cell photo__cell" style="background-color: rgba({{ row[1][-1][0] }}, {{ row[1][-1][1] }}, {{ row[1][-1][2] }}, 0.5);"><img src="{{ row[1][-2] }}" class="driverPhoto"></td>
+                        {% for cell in row[1][0:-2] %}
+                        <td class="table__cell" style="background-color: rgba({{ row[1][-1][0] }}, {{ row[1][-1][1] }}, {{ row[1][-1][2] }}, 0.5);">{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table> <!--Script at end reloads the page every so often to update content, will be more frequent during a race.-->
+            </div>
+        </div>
         <script> 
             setTimeout(function() { 
                 location.reload(); 
